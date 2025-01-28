@@ -5,6 +5,7 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 import re 
+import time
 def games_month(year, month):
     url = f"https://www.basketball-reference.com/leagues/NBA_{year}_games-{month}.html"
     
@@ -17,29 +18,48 @@ def games_month(year, month):
     soup = BeautifulSoup(html_content, 'html.parser')
     
     csk_values = [re.search(r'csk="([^"]+)"', str(tag)) and re.search(r'csk="([^"]+)"', str(tag)).group(1) for tag in soup.find_all('th', {'data-stat': 'date_game'})]
+    time.sleep(5)
     return csk_values 
 
-Home= games_month(2024, "october")[1:]
+Home= []
+#games_month(2024, "october")[1:]
+
+
 
 
 def make_url(Home):
     url = f"https://www.basketball-reference.com/boxscores/{Home}.html"
     return url 
 
-game_list = []
-for i in range(len(Home)):
-   game_list.append(make_url(Home[i]))
+
 
 import time 
 
 
-months = ["january", "february", "march", "april", "october", "november", "december"]
-years = [2020,2021,2022,2023,2024]
+months = ["january", "february"]
+#, "march", "april", "october", "november", "december"]
+
+
+
+years = [2023,2024]
+for y in years: 
+    for m in months: 
+        Home.append(games_month(y, m)[1:])
+        
+def flatten(xss):
+    return [x for xs in xss for x in xs]
+
+Home = flatten(Home)
+
+
+game_list = []
+for i in range(len(Home)):
+   game_list.append(make_url(Home[i]))
+
+print(game_list[0:10])
 
 lst_values = []
-print(game_list)
-
-for i in range(10): 
+for i in range(len(game_list)): 
     print(game_list[i])
 
 
@@ -48,10 +68,10 @@ for i in range(10):
     # Find the h1 element within the specified context
     soup = BeautifulSoup(html_content,'html.parser')
     h1_text = soup.select_one('#content h1').get_text(strip=True)
-    print(h1_text)
+
     Away = h1_text.split(" at")[0]
     Home = h1_text.split(" at")[1].split("Box Score")[0].strip()
-    print(Home)
+    
 
     # Parse the HTML content using BeautifulSoup
     soup = BeautifulSoup(html_content, 'html.parser')

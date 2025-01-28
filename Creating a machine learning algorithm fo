@@ -1,0 +1,9 @@
+Creating a machine learning algorithm for predicting NBA games
+Needs:
+Stats: All kinds of advanced stats for each game team stats 
+How do we assign the labels?
+Plug in the two teams advanced stats and have it predict who wins? 
+Could do both a classifier and a logistic regression to predict the score...?
+make the label the team that won??????
+
+Hm. 
